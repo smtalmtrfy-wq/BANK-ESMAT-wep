@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد - بنك عصمت الحميدي</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .registration-progress {
+            margin-bottom: 40px;
+        }
+        
+        .progress-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 15px;
+            color: #6c757d;
+        }
+        
+        .step-number.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .step-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .registration-form {
+            display: none;
+        }
+        
+        .registration-form.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .account-type-card {
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .account-type-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+        
+        .account-type-card.selected {
+            border-color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        .account-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .requirements-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .requirements-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .requirements-list li i {
+            color: var(--success-color);
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- شريط التنبيهات -->
+    <div class="alert-bar">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span>بنك عصمت الحميدي - إنشاء حساب جديد</span>
+                </div>
+                <div>
+                    <a href="index.html" class="btn btn-sm btn-outline-warning">
+                        <i class="fas fa-arrow-right"></i> العودة لتسجيل الدخول
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط التنقل -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-university"></i>
+                <span>بنك عصمت الحميدي</span>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="nav-text text-warning">
+                    <i class="fas fa-user-plus me-2"></i>إنشاء حساب جديد
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container main-container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- تقدم التسجيل -->
+                <div class="registration-progress">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="progress-step">
+                                <div class="step-number active" id="step1">1</div>
+                                <div class="step-content">
+                                    <div class="step-title">المعلومات الشخصية</div>
+                                    <div class="step-description">الاسم والبيانات الأساسية</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="progress-step">
+                                <div class="step-number" id="step2">2</div>
+                                <div class="step-content">
+                                    <div class="step-title">معلومات الحساب</div>
+                                    <div class="step-description">تفاصيل الحساب المصرفي</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="progress-step">
+                                <div class="step-number" id="step3">3</div>
+                                <div class="step-content">
+                                    <div class="step-title">التحقق</div>
+                                    <div class="step-description">التحقق والموافقة</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- نموذج التسجيل -->
+                <div class="card registration-card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>إنشاء حساب جديد</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- الخطوة 1: المعلومات الشخصية -->
+                        <form id="registrationForm" class="registration-form active" data-step="1">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fullName" class="form-label">الاسم الكامل</label>
+                                    <input type="text" class="form-control" id="fullName" 
+                                           placeholder="أدخل الاسم الكامل كما في الهوية" required>
+                                    <div class="invalid-feedback">يرجى إدخال الاسم الكامل</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="nationalId" class="form-label">رقم الهوية الوطنية</label>
+                                    <input type="text" class="form-control" id="nationalId" 
+                                           placeholder="10 أرقام" minlength="10" maxlength="10" required>
+                                    <div class="invalid-feedback">يرجى إدخال رقم هوية صحيح (10 أرقام)</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="birthDate" class="form-label">تاريخ الميلاد</label>
+                                    <input type="date" class="form-control" id="birthDate" required>
+                                    <div class="invalid-feedback">يرجى إدخال تاريخ الميلاد</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">رقم الهاتف</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">+967</span>
+                                        <input type="tel" class="form-control" id="phone" 
+                                               placeholder="7XXXXXXXX" pattern="[0-9]{9}" required>
+                                    </div>
+                                    <div class="invalid-feedback">يرجى إدخال رقم هاتف صحيح (9 أرقام)</div>
+                                </div>
+                                
+                                <div class="col-md-12 mb-3">
+                                    <label for="email" class="form-label">البريد الإلكتروني</label>
+                                    <input type="email" class="form-control" id="email" 
+                                           placeholder="example@domain.com" required>
+                                    <div class="invalid-feedback">يرجى إدخال بريد إلكتروني صحيح</div>
+                                </div>
+                                
+                                <div class="col-md-12 mb-3">
+                                    <label for="address" class="form-label">العنوان</label>
+                                    <textarea class="form-control" id="address" rows="2" 
+                                              placeholder="العنوان التفصيلي" required></textarea>
+                                    <div class="invalid-feedback">يرجى إدخال العنوان</div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-navigation">
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='index.html'">
+                                    <i class="fas fa-times"></i> إلغاء
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="nextStep(2)">
+                                    التالي <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- الخطوة 2: معلومات الحساب -->
+                        <form id="accountForm" class="registration-form" data-step="2">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="username" class="form-label">اسم المستخدم</label>
+                                    <input type="text" class="form-control" id="username" 
+                                           placeholder="سيتم استخدامه لتسجيل الدخول" required>
+                                    <div class="invalid-feedback">يرجى إدخال اسم مستخدم</div>
+                                    <div class="form-text" id="usernameCheck"></div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="accountType" class="form-label">نوع الحساب</label>
+                                    <select class="form-select" id="accountType" required>
+                                        <option value="" selected disabled>اختر نوع الحساب</option>
+                                        <option value="current">حساب جاري</option>
+                                        <option value="saving">حساب توفير</option>
+                                        <option value="investment">حساب استثماري</option>
+                                        <option value="business">حساب أعمال</option>
+                                    </select>
+                                    <div class="invalid-feedback">يرجى اختيار نوع الحساب</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label">كلمة المرور</label>
+                                    <div class="password-input">
+                                        <input type="password" class="form-control" id="password" 
+                                               placeholder="8 أحرف على الأقل" minlength="8" required>
+                                        <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="invalid-feedback">كلمة المرور يجب أن تكون 8 أحرف على الأقل</div>
+                                    <div class="password-strength mt-2">
+                                        <div class="progress" style="height: 5px;">
+                                            <div class="progress-bar" id="passwordStrength" role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                        <small class="text-muted" id="passwordStrengthText">قوة كلمة المرور</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="confirmPassword" class="form-label">تأكيد كلمة المرور</label>
+                                    <div class="password-input">
+                                        <input type="password" class="form-control" id="confirmPassword" 
+                                               placeholder="أعد إدخال كلمة المرور" required>
+                                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="invalid-feedback">كلمات المرور غير متطابقة</div>
+                                </div>
+                                
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">أرغب في تفعيل الميزات التالية:</label>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="enableOtp" checked>
+                                                <label class="form-check-label" for="enableOtp">
+                                                    التحقق بخطوتين (OTP)
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="enableSmsAlerts" checked>
+                                                <label class="form-check-label" for="enableSmsAlerts">
+                                                    إشعارات SMS
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="enableEmailAlerts" checked>
+                                                <label class="form-check-label" for="enableEmailAlerts">
+                                                    إشعارات البريد الإلكتروني
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="enableBiometric">
+                                                <label class="form-check-label" for="enableBiometric">
+                                                    المصادقة البيومترية (إذا متاحة)
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    <div class="card bg-light border-primary">
+                                        <div class="card-body">
+                                            <h6><i class="fas fa-info-circle text-primary me-2"></i>ملاحظات هامة:</h6>
+                                            <ul class="mb-0">
+                                                <li>اسم المستخدم يجب أن يكون فريداً</li>
+                                                <li>كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل</li>
+                                                <li>سيتم إرسال رمز التحقق إلى هاتفك</li>
+                                                <li>قد تستغرق عملية الموافقة على الحساب حتى 24 ساعة</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-navigation">
+                                <button type="button" class="btn btn-secondary" onclick="prevStep(1)">
+                                    <i class="fas fa-arrow-right"></i> السابق
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="nextStep(3)">
+                                    التالي <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- الخطوة 3: التحقق -->
+                        <form id="verificationForm" class="registration-form" data-step="3">
+                            <div class="text-center mb-5">
+                                <i class="fas fa-shield-alt fa-4x text-primary mb-3"></i>
+                                <h4>التحقق والموافقة</h4>
+                                <p class="text-muted">أدخل رمز التحقق الذي تم إرساله إلى هاتفك</p>
+                            </div>
+                            
+                            <div class="row justify-content-center">
+                                <div class="col-md-8">
+                                    <div class="mb-4">
+                                        <label for="verificationCode" class="form-label">رمز التحقق (OTP)</label>
+                                        <div class="otp-input-group mb-3">
+                                            <input type="text" maxlength="1" class="otp-box" data-index="1" autocomplete="off">
+                                            <input type="text" maxlength="1" class="otp-box" data-index="2" autocomplete="off">
+                                            <input type="text" maxlength="1" class="otp-box" data-index="3" autocomplete="off">
+                                            <input type="text" maxlength="1" class="otp-box" data-index="4" autocomplete="off">
+                                            <input type="text" maxlength="1" class="otp-box" data-index="5" autocomplete="off">
+                                            <input type="text" maxlength="1" class="otp-box" data-index="6" autocomplete="off">
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" id="resendOtpBtn" disabled>
+                                                إعادة الإرسال (<span id="otpCountdown">60</span>)
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="termsAgreement" required>
+                                            <label class="form-check-label" for="termsAgreement">
+                                                أوافق على <a href="#" class="text-primary">الشروط والأحكام</a> 
+                                                و <a href="#" class="text-primary">سياسة الخصوصية</a> لبنك عصمت الحميدي
+                                            </label>
+                                            <div class="invalid-feedback">يجب الموافقة على الشروط والأحكام</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card border-success bg-success bg-opacity-10">
+                                        <div class="card-body">
+                                            <h6><i class="fas fa-check-circle text-success me-2"></i>بيانات الحساب المقترحة:</h6>
+                                            <div class="row mt-3">
+                                                <div class="col-6">
+                                                    <small class="text-muted d-block">رقم الحساب:</small>
+                                                    <strong id="previewAccountNumber">--</strong>
+                                                </div>
+                                                <div class="col-6">
+                                                    <small class="text-muted d-block">نوع الحساب:</small>
+                                                    <strong id="previewAccountType">--</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-navigation">
+                                <button type="button" class="btn btn-secondary" onclick="prevStep(2)">
+                                    <i class="fas fa-arrow-right"></i> السابق
+                                </button>
+                                <button type="submit" class="btn btn-success" id="completeRegistration">
+                                    <i class="fas fa-check"></i> إنشاء الحساب
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- نموذج التحقق من البريد الإلكتروني -->
+                        <div id="emailVerification" class="registration-form" data-step="4" style="display: none;">
+                            <div class="text-center py-5">
+                                <i class="fas fa-envelope-circle-check fa-4x text-primary mb-4"></i>
+                                <h3>تحقق من بريدك الإلكتروني</h3>
+                                <p class="text-muted mb-4">
+                                    تم إرسال رابط التحقق إلى البريد الإلكتروني:
+                                    <strong id="registeredEmail">user@example.com</strong>
+                                </p>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    يرجى التحقق من صندوق الوارد أو البريد المزعج والنقر على رابط التحقق
+                                </div>
+                                <div class="mt-4">
+                                    <button type="button" class="btn btn-primary me-2" id="resendEmailBtn">
+                                        <i class="fas fa-redo"></i> إعادة إرسال البريد
+                                    </button>
+                                    <button type="button" class="btn btn-success" onclick="window.location.href='index.html'">
+                                        <i class="fas fa-sign-in-alt"></i> الانتقال لتسجيل الدخول
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- معلومات إيداع الأموال -->
+                <div class="card mt-4 border-warning">
+                    <div class="card-body text-center">
+                        <h5><i class="fas fa-money-bill-wave text-warning me-2"></i>لإيداع الأموال بعد إنشاء الحساب:</h5>
+                        <p class="mb-2">قم بالإيداع إلى رقم الحساب:</p>
+                        <div class="display-6 text-primary fw-bold">770914162</div>
+                        <p class="text-muted mt-2">
+                            <i class="fas fa-phone me-1"></i> للتواصل: 770914162 |
+                            <i class="fas fa-map-marker-alt me-1 ms-3"></i> اليمن - لحج - العند
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الفوتر -->
+    <footer class="footer py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-3">
+                    <h5><i class="fas fa-university"></i> بنك عصمت الحميدي</h5>
+                    <p class="footer-text">
+                        نحو مستقبل مالي آمن ومستقر لجميع العملاء.
+                    </p>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <h5><i class="fas fa-headset"></i> الدعم والمساعدة</h5>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-phone"></i> 770914162</p>
+                        <p><i class="fas fa-clock"></i> السبت - الخميس: 8:00 ص - 4:00 م</p>
+                        <p><i class="fas fa-map-marker-alt"></i> اليمن - لحج - العند</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="text-center">
+                <p class="mb-0">
+                    &copy; 2026 بنك عصمت الحميدي. جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        let currentStep = 1;
+        let generatedAccountNumber = '';
+        let generatedOTP = '';
+        let otpTimer = null;
+
+        // تهيئة عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            generatePreviewAccount();
+        });
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // التحقق من اسم المستخدم
+            document.getElementById('username').addEventListener('input', checkUsernameAvailability);
+            
+            // التحقق من قوة كلمة المرور
+            document.getElementById('password').addEventListener('input', checkPasswordStrength);
+            
+            // التحقق من تطابق كلمات المرور
+            document.getElementById('confirmPassword').addEventListener('input', checkPasswordMatch);
+            
+            // إدخال OTP
+            document.querySelectorAll('.otp-box').forEach(box => {
+                box.addEventListener('input', handleOtpInput);
+            });
+            
+            // إعادة إرسال OTP
+            document.getElementById('resendOtpBtn').addEventListener('click', resendOTP);
+            
+            // إكمال التسجيل
+            document.getElementById('completeRegistration').addEventListener('click', completeRegistration);
+            
+            // إعادة إرسال البريد الإلكتروني
+            document.getElementById('resendEmailBtn').addEventListener('click', resendVerificationEmail);
+            
+            // توليد رقم حساب مسبقاً
+            document.getElementById('accountType').addEventListener('change', generatePreviewAccount);
+        }
+
+        // الانتقال للخطوة التالية
+        function nextStep(step) {
+            if (!validateCurrentStep()) return;
+            
+            // تحديث الخطوة الحالية
+            currentStep = step;
+            
+            // تحديث مؤشر التقدم
+            updateProgressSteps();
+            
+            // إخفاء جميع النماذج
+            document.querySelectorAll('.registration-form').forEach(form => {
+                form.style.display = 'none';
+                form.classList.remove('active');
+            });
+            
+            // إظهار النموذج الحالي
+            const currentForm = document.querySelector(`.registration-form[data-step="${step}"]`);
+            if (currentForm) {
+                currentForm.style.display = 'block';
+                setTimeout(() => {
+                    currentForm.classList.add('active');
+                }, 10);
+            }
+            
+            // إذا كانت الخطوة 3، أرسل OTP
+            if (step === 3) {
+                generatePreviewAccount();
+                sendOTP();
+            }
+        }
+
+        // العودة للخطوة السابقة
+        function prevStep(step) {
+            currentStep = step;
+            updateProgressSteps();
+            
+            // إخفاء جميع النماذج
+            document.querySelectorAll('.registration-form').forEach(form => {
+                form.style.display = 'none';
+                form.classList.remove('active');
+            });
+            
+            // إظهار النموذج الحالي
+            const currentForm = document.querySelector(`.registration-form[data-step="${step}"]`);
+            if (currentForm) {
+                currentForm.style.display = 'block';
+                setTimeout(() => {
+                    currentForm.classList.add('active');
+                }, 10);
+            }
+        }
+
+        // تحديث مؤشر التقدم
+        function updateProgressSteps() {
+            for (let i = 1; i <= 3; i++) {
+                const stepElement = document.getElementById(`step${i}`);
+                if (stepElement) {
+                    if (i <= currentStep) {
+                        stepElement.classList.add('active');
+                    } else {
+                        stepElement.classList.remove('active');
+                    }
+                }
+            }
+        }
+
+        // التحقق من الخطوة الحالية
+        function validateCurrentStep() {
+            const currentForm = document.querySelector(`.registration-form[data-step="${currentStep}"]`);
+            const inputs = currentForm.querySelectorAll('input[required], select[required], textarea[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                input.classList.remove('is-invalid');
+                
+                if (!input.value.trim()) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else if (input.id === 'email' && !validateEmail(input.value)) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else if (input.id === 'phone' && !validatePhone(input.value)) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else if (input.id === 'nationalId' && !validateNationalId(input.value)) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else if (input.id === 'password' && input.value.length < 8) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else if (input.id === 'confirmPassword') {
+                    const password = document.getElementById('password').value;
+                    if (input.value !== password) {
+                        input.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                }
+            });
+            
+            return isValid;
+        }
+
+        // التحقق من البريد الإلكتروني
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // التحقق من رقم الهاتف
+        function validatePhone(phone) {
+            return /^[0-9]{9}$/.test(phone);
+        }
+
+        // التحقق من رقم الهوية
+        function validateNationalId(id) {
+            return /^[0-9]{10}$/.test(id);
+        }
+
+        // التحقق من اسم المستخدم
+        function checkUsernameAvailability() {
+            const username = document.getElementById('username').value;
+            const feedback = document.getElementById('usernameCheck');
+            
+            if (username.length < 3) {
+                feedback.innerHTML = '<small class="text-muted">يجب أن يكون اسم المستخدم 3 أحرف على الأقل</small>';
+                return;
+            }
+            
+            // التحقق من التكرار (محاكاة)
+            const existingUsers = JSON.parse(localStorage.getItem('bankUsers')) || [];
+            const isTaken = existingUsers.some(user => user.username === username);
+            
+            if (isTaken) {
+                feedback.innerHTML = '<small class="text-danger">اسم المستخدم موجود مسبقاً</small>';
+            } else {
+                feedback.innerHTML = '<small class="text-success">اسم المستخدم متاح</small>';
+            }
+        }
+
+        // التحقق من قوة كلمة المرور
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthBar = document.getElementById('passwordStrength');
+            const strengthText = document.getElementById('passwordStrengthText');
+            
+            let strength = 0;
+            let text = 'ضعيفة';
+            let color = '#ff4757';
+            
+            if (password.length >= 8) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 25;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+            
+            if (strength >= 75) {
+                text = 'قوية جداً';
+                color = '#2ed573';
+            } else if (strength >= 50) {
+                text = 'قوية';
+                color = '#1e90ff';
+            } else if (strength >= 25) {
+                text = 'متوسطة';
+                color = '#ffa502';
+            }
+            
+            strengthBar.style.width = `${strength}%`;
+            strengthBar.style.backgroundColor = color;
+            strengthText.textContent = `قوة كلمة المرور: ${text}`;
+            strengthText.style.color = color;
+        }
+
+        // التحقق من تطابق كلمات المرور
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const confirmInput = document.getElementById('confirmPassword');
+            
+            if (confirmPassword && password !== confirmPassword) {
+                confirmInput.classList.add('is-invalid');
+            } else {
+                confirmInput.classList.remove('is-invalid');
+            }
+        }
+
+        // توليد رقم حساب
+        function generatePreviewAccount() {
+            const accountType = document.getElementById('accountType').value;
+            const types = {
+                'current': 'جاري',
+                'saving': 'توفير',
+                'investment': 'استثماري',
+                'business': 'أعمال'
+            };
+            
+            // توليد رقم حساب عشوائي (محاكاة)
+            generatedAccountNumber = '10' + Math.floor(10000000 + Math.random() * 90000000);
+            
+            document.getElementById('previewAccountNumber').textContent = generatedAccountNumber;
+            document.getElementById('previewAccountType').textContent = types[accountType] || '--';
+        }
+
+        // إظهار/إخفاء كلمة المرور
+        function togglePassword(fieldId) {
+            const input = document.getElementById(fieldId);
+            const toggleBtn = input.nextElementSibling;
+            const icon = toggleBtn.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // إرسال OTP
+        function sendOTP() {
+            const phone = document.getElementById('phone').value;
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            console.log(`OTP sent to ${phone}: ${generatedOTP}`);
+            
+            // بدء العد التنازلي
+            startOTPTimer();
+            
+            // عرض رسالة (محاكاة)
+            showToast(`تم إرسال رمز التحقق إلى هاتفك (${phone})`, 'info');
+        }
+
+        // إعادة إرسال OTP
+        function resendOTP() {
+            sendOTP();
+            showToast('تم إعادة إرسال رمز التحقق', 'info');
+        }
+
+        // بدء عد تنازلي لـ OTP
+        function startOTPTimer() {
+            let timeLeft = 60;
+            const timerElement = document.getElementById('otpCountdown');
+            const resendBtn = document.getElementById('resendOtpBtn');
+            
+            resendBtn.disabled = true;
+            
+            if (otpTimer) clearInterval(otpTimer);
+            
+            otpTimer = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+              if (timeLeft <= 0) {
+                    clearInterval(otpTimer);
+                    resendBtn.disabled = false;
+                    timerElement.textContent = 'إرسال';
+                }
+            }, 1000);
+        }
+
+        // معالجة إدخال OTP
+        function handleOtpInput(e) {
+            const value = e.target.value;
+            const index = parseInt(e.target.dataset.index);
+            
+            if (value.length === 1 && index < 6) {
+                document.querySelector(`.otp-box[data-index="${index + 1}"]`).focus();
+            }
+            
+            if (value.length === 0 && index > 1) {
+                document.querySelector(`.otp-box[data-index="${index - 1}"]`).focus();
+            }
+        }
+
+        // إكمال التسجيل
+        function completeRegistration() {
+            // التحقق من OTP
+            const otpDigits = document.querySelectorAll('.otp-box');
+            const enteredOTP = Array.from(otpDigits).map(input => input.value).join('');
+            
+            if (enteredOTP !== generatedOTP) {
+                showToast('رمز التحقق غير صحيح', 'error');
+                return;
+            }
+            
+            // التحقق من الموافقة على الشروط
+            const termsAgreement = document.getElementById('termsAgreement');
+            if (!termsAgreement.checked) {
+                termsAgreement.classList.add('is-invalid');
+                showToast('يجب الموافقة على الشروط والأحكام', 'error');
+                return;
+            }
+            
+            // جمع بيانات المستخدم
+            const userData = {
+                id: Date.now(),
+                fullName: document.getElementById('fullName').value,
+                nationalId: document.getElementById('nationalId').value,
+                birthDate: document.getElementById('birthDate').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                accountType: document.getElementById('accountType').value,
+                accountNumber: generatedAccountNumber,
+                balance: 0,
+                role: 'user',
+                loginAttempts: 0,
+                isLocked: false,
+                lockUntil: null,
+                lastLogin: null,
+                createdAt: new Date().toISOString(),
+                transactions: [],
+                failedLogins: [],
+                otpEnabled: document.getElementById('enableOtp').checked,
+                smsAlerts: document.getElementById('enableSmsAlerts').checked,
+                emailAlerts: document.getElementById('enableEmailAlerts').checked,
+                biometricAuth: document.getElementById('enableBiometric').checked,
+                preferences: {
+                    language: 'ar',
+                    theme: 'dark',
+                    notifications: true
+                }
+            };
+            
+            try {
+                // حفظ المستخدم
+                let users = JSON.parse(localStorage.getItem('bankUsers')) || [];
+                users.push(userData);
+                localStorage.setItem('bankUsers', JSON.stringify(users));
+                
+                // تسجيل النشاط
+                logActivity(userData.id, 'register', 'إنشاء حساب جديد');
+                
+                // إظهار رسالة النجاح
+                showToast('تم إنشاء الحساب بنجاح!', 'success');
+                
+                // الانتقال لخطوة التحقق من البريد الإلكتروني
+                document.getElementById('registeredEmail').textContent = userData.email;
+                nextStep(4);
+                
+            } catch (error) {
+                console.error('Error saving user:', error);
+                showToast('حدث خطأ أثناء إنشاء الحساب', 'error');
+            }
+        }
+
+        // إعادة إرسال بريد التحقق
+        function resendVerificationEmail() {
+            const email = document.getElementById('registeredEmail').textContent;
+            console.log(`Resending verification email to ${email}`);
+            showToast('تم إعادة إرسال بريد التحقق', 'success');
+        }
+
+        // عرض رسالة Toast
+        function showToast(message, type = 'info') {
+            const colors = {
+                success: '#4CAF50',
+                error: '#F44336',
+                warning: '#FF9800',
+                info: '#2196F3'
+            };
+            
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: colors[type] || colors.info,
+                stopOnFocus: true,
+                className: "animate__animated animate__fadeIn"
+            }).showToast();
+        }
+
+        // تسجيل النشاط
+        function logActivity(userId, action, description) {
+            const activity = {
+                userId,
+                action,
+                description,
+                timestamp: new Date().toISOString(),
+                ip: '192.168.1.' + Math.floor(Math.random() * 255)
+            };
+            
+            let activities = JSON.parse(localStorage.getItem('userActivities')) || [];
+            activities.push(activity);
+            localStorage.setItem('userActivities', JSON.stringify(activities));
+        }
+    </script>
+</body>
+</html>

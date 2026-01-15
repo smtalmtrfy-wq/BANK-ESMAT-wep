@@ -1,0 +1,332 @@
+
+
+/* شريط التنبيهات */
+.alert-bar {
+    padding: 10px 0;
+    background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
+    color: #000;
+}
+
+/* شريط التنقل */
+.navbar {
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar-brand i {
+    color: #4cc9f0;
+}
+
+/* بطاقة تسجيل الدخول */
+.login-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+}
+
+.login-card .card-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 20px;
+    border-bottom: none;
+}
+
+.login-card .card-body {
+    padding: 30px;
+}
+
+/* إدخال OTP */
+.otp-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.otp-digit {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 24px;
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--light-color);
+}
+
+/* بطاقات الخدمات */
+.service-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 30px 20px;
+    height: 100%;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    border-color: var(--primary-color);
+}
+
+.service-card i {
+    font-size: 40px;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+/* بطاقات الميزات */
+.feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.feature-card i {
+    font-size: 30px;
+    color: var(--success-color);
+    margin-bottom: 10px;
+}
+
+/* الفوتر */
+.footer {
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid var(--border-color);
+    margin-top: 50px;
+}
+
+.footer ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer ul li {
+    margin-bottom: 10px;
+}
+
+.footer a {
+    color: var(--light-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer a:hover {
+    color: var(--primary-color);
+}
+
+/* إحصائيات سريعة */
+.quick-stats .stat-item {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.stat-item h5 {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* معلومات الاتصال */
+.contact-info {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 20px;
+    border-left: 5px solid var(--primary-color);
+}
+
+/* التبديل بين الوضعين */
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* الأزرار */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+}
+
+.btn-outline-secondary {
+    border-color: var(--border-color);
+    color: var(--light-color);
+}
+
+.btn-outline-secondary:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* حقول الإدخال */
+.form-control {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--light-color);
+    padding: 12px 15px;
+    border-radius: 10px;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary-color);
+    color: var(--light-color);
+    box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+}
+
+.input-group-text {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--light-color);
+}
+
+/* الرسوم المتحركة */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.animate__animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+.animate__fadeIn {
+    animation-name: fadeIn;
+}
+
+.animate__shake {
+    animation-name: shake;
+}
+
+/* شريط التقدم */
+.progress {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    height: 10px;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+    border-radius: 10px;
+}
+
+/* تخصيص التمرير */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* التجاوب */
+@media (max-width: 768px) {
+    .login-card .card-body {
+        padding: 20px;
+    }
+    
+    .service-card {
+        margin-bottom: 20px;
+    }
+    
+    .otp-digit {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .alert-bar .row {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand span {
+        font-size: 1.2rem;
+    }
+    
+    .deposit-banner {
+        padding: 15px;
+    }
+    
+    .exchange-rates {
+        padding: 10px;
+    }
+    
+    .feature-card {
+        padding: 10px;
+    }
+}
+
+/* تنسيقات للوضع النهاري */
+body[data-theme="light"] {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+body[data-theme="light"] .login-card {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+}
+
+body[data-theme="light"] .form-control {
+    background: rgba(0, 0, 0, 0.05);
+    color: #333;
+}
+
+body[data-theme="light"] .footer {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+body[data-theme="light"] .footer a {
+    color: #333;
+}
+```

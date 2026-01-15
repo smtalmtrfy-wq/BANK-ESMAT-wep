@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - بنك عصمت الحميدي</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            width: 250px;
+        }
+        
+        .sidebar .logo {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            margin: 5px 0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .main-content {
+            margin-right: 250px;
+            padding: 20px;
+        }
+        
+        .balance-card {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                min-height: auto;
+            }
+            .main-content {
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط الجانبي -->
+    <div class="sidebar">
+        <div class="logo">
+            <h4><i class="fas fa-university"></i> بنك عصمت الحميدي</h4>
+        </div>
+        
+        <!-- معلومات المستخدم -->
+        <div class="user-info text-center p-3">
+            <img src="https://ui-avatars.com/api/?name=مستخدم&background=random" 
+                 class="rounded-circle mb-2" width="80" height="80">
+            <h6 id="userName">مرحباً!</h6>
+            <small id="userEmail"></small>
+        </div>
+        
+        <!-- القائمة -->
+        <nav class="nav flex-column p-3">
+            <a class="nav-link active" href="dashboard.html">
+                <i class="fas fa-home"></i> الرئيسية
+            </a>
+            <a class="nav-link" href="transfer.html">
+                <i class="fas fa-exchange-alt"></i> التحويلات
+            </a>
+            <a class="nav-link" href="transactions.html">
+                <i class="fas fa-history"></i> سجل المعاملات
+            </a>
+            <a class="nav-link" href="profile.html">
+                <i class="fas fa-user"></i> الملف الشخصي
+            </a>
+            <a class="nav-link" href="#" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </a>
+        </nav>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <!-- شريط العنوان -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h3>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> تحديث
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" 
+                            data-bs-toggle="dropdown">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="profile.html">الملف الشخصي</a></li>
+                        <li><a class="dropdown-item" href="#">الإعدادات</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="logoutBtn2">تسجيل الخروج</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- بطاقة الرصيد -->
+        <div class="balance-card">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h6>الرصيد المتاح</h6>
+                    <h1 id="userBalance">0 ريال</h1>
+                    <p>رقم الحساب: <span id="accountNumber">770914162</span></p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-wallet fa-4x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- بطاقات الإحصائيات -->
+        <div class="row">
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6>الإيداعات</h6>
+                            <h3 id="totalDeposits">0</h3>
+                        </div>
+                        <i class="fas fa-arrow-down text-success fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6>السحوبات</h6>
+                            <h3 id="totalWithdrawals">0</h3>
+                        </div>
+                        <i class="fas fa-arrow-up text-danger fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6>التحويلات</h6>
+                            <h3 id="totalTransfers">0</h3>
+                        </div>
+                        <i class="fas fa-exchange-alt text-warning fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6>الرصيد المعلّق</h6>
+                            <h3 id="pendingBalance">0</h3>
+                        </div>
+                        <i class="fas fa-clock text-info fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- آخر المعاملات -->
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="stat-card">
+                    <h5><i class="fas fa-history"></i> آخر المعاملات</h5>
+                    <div id="recentTransactions" class="mt-3">
+                        <p class="text-center text-muted">جارٍ تحميل البيانات...</p>
+                    </div>
+                    <a href="transactions.html" class="btn btn-outline-primary w-100 mt-3">
+                        عرض جميع المعاملات
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <h5><i class="fas fa-bolt"></i> إجراء سريع</h5>
+                    <div class="d-grid gap-2 mt-3">
+                        <button class="btn btn-primary" onclick="window.location.href='transfer.html'">
+                            <i class="fas fa-exchange-alt"></i> تحويل أموال
+                        </button>
+                        <button class="btn btn-success">
+                            <i class="fas fa-plus"></i> إيداع
+                        </button>
+                        <button class="btn btn-warning">
+                            <i class="fas fa-credit-card"></i> دفع فاتورة
+                        </button>
+                        <button class="btn btn-info">
+                            <i class="fas fa-download"></i> كشف حساب
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- معلومات الاتصال -->
+                <div class="stat-card mt-3">
+                    <h6><i class="fas fa-phone"></i> للتواصل</h6>
+                    <p><strong>رقم الحساب للإيداع:</strong> 770914162</p>
+                    <p><strong>الهاتف:</strong> 770914162</p>
+                    <p><strong>الموقع:</strong> اليمن - لحج - العند</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
+    <script>
+        // التحقق من تسجيل الدخول
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("تم تحميل لوحة التحكم");
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            console.log("المستخدم الحالي:", currentUser);
+            
+            if (!currentUser) {
+                console.log("لا يوجد مستخدم مسجل، سيتم التوجيه للصفحة الرئيسية");
+                window.location.href = "index.html";
+                return;
+            }
+            
+            // تحديث بيانات المستخدم في الواجهة
+            document.getElementById('userName').textContent = currentUser.fullName || 'مستخدم';
+            document.getElementById('userEmail').textContent = currentUser.email || '';
+            document.getElementById('userBalance').textContent = 
+                (currentUser.balance || 0).toLocaleString() + ' ريال';
+            document.getElementById('accountNumber').textContent = currentUser.accountNumber || '770914162';
+            
+            // تحميل المعاملات
+            loadTransactions();
+            
+            // إعداد أزرار تسجيل الخروج
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            document.getElementById('logoutBtn2').addEventListener('click', logout);
+            
+            // زر التحديث
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                location.reload();
+            });
+        });
+        
+        // دالة تسجيل الخروج
+        function logout() {
+            console.log("تسجيل الخروج...");
+            localStorage.removeItem('currentUser');
+            window.location.href = "index.html";
+        }
+        
+        // تحميل المعاملات
+        function loadTransactions() {
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser) return;
+            
+            // تصفية معاملات المستخدم
+            const userTransactions = transactions.filter(t => 
+                t.fromAccount === currentUser.accountNumber || 
+                t.toAccount === currentUser.accountNumber
+            ).slice(-5).reverse();
+            
+            const container = document.getElementById('recentTransactions');
+            
+            if (userTransactions.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted">لا توجد معاملات</p>';
+                return;
+            }
+            
+            container.innerHTML = userTransactions.map(t => `
+                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                    <div>
+                        <strong>${getTransactionType(t.type)}</strong>
+                        <p class="mb-0 text-muted small">${t.description || 'بدون وصف'}</p>
+                        <small class="text-muted">${new Date(t.timestamp).toLocaleDateString('ar-SA')}</small>
+                    </div>
+                    <div class="text-end">
+                        <h6 class="${t.type === 'deposit' ? 'text-success' : 'text-danger'} mb-0">
+                            ${t.type === 'deposit' ? '+' : '-'}${t.amount.toLocaleString()} ريال
+                        </h6>
+                        <small class="text-muted">الرصيد: ${t.balanceAfter?.toLocaleString() || currentUser.balance.toLocaleString()} ريال</small>
+                    </div>
+                </div>
+            `).join('');
+            
+            // تحديث الإحصائيات
+            updateStatistics(userTransactions);
+        }
+        
+        // الحصول على نوع المعاملة
+        function getTransactionType(type) {
+            const types = {
+                'deposit': 'إيداع',
+                'withdrawal': 'سحب',
+                'transfer': 'تحويل',
+                'payment': 'دفع'
+            };
+            return types[type] || 'معاملة';
+        }
+        
+        // تحديث الإحصائيات
+        function updateStatistics(transactions) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            const deposits = transactions.filter(t => t.type === 'deposit');
+            const withdrawals = transactions.filter(t => t.type === 'withdrawal');
+            const transfers = transactions.filter(t => t.type === 'transfer');
+            
+            document.getElementById('totalDeposits').textContent = 
+                deposits.reduce((sum, t) => sum + t.amount, 0).toLocaleString();
+            document.getElementById('totalWithdrawals').textContent = 
+                withdrawals.reduce((sum, t) => sum + t.amount, 0).toLocaleString();
+            document.getElementById('totalTransfers').textContent = transfers.length;
+        }
+        
+        // إظهار رسالة ترحيب
+        setTimeout(() => {
+            Toastify({
+                text: "مرحباً بك في بنك عصمت الحميدي!",
+                duration: 3000,
+                gravity: "top",
+                position: "left",
+                backgroundColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                stopOnFocus: true
+            }).showToast();
+        }, 1000);
+    </script>
+</body>
+</html>

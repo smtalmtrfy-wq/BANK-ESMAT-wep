@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحويل الأموال - بنك عصمت الحميدي</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .transfer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .transfer-wizard {
+            margin-bottom: 40px;
+        }
+        
+        .wizard-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .wizard-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: 0;
+            left: 0;
+            height: 2px;
+            background: #dee2e6;
+            z-index: 1;
+        }
+        
+        .wizard-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+        
+        .step-circle.active {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .step-circle.completed {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .step-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .step-title.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .transfer-form-section {
+            display: none;
+        }
+        
+        .transfer-form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .recipient-card {
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .recipient-card:hover {
+            border-color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        .recipient-card.selected {
+            border-color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.1);
+        }
+        
+        .recipient-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 15px;
+        }
+        
+        .amount-input {
+            position: relative;
+        }
+        
+        .amount-input .form-control {
+            padding-left: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: right;
+        }
+        
+        .amount-input .currency-symbol {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .amount-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
+        .amount-option {
+            padding: 8px 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .amount-option:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .amount-option.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .fee-calculator {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .fee-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .fee-item:last-child {
+            border-bottom: none;
+        }
+        
+        .fee-total {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .exchange-rate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .transfer-summary {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            color: var(--gray-color);
+        }
+        
+        .summary-value {
+            font-weight: 600;
+        }
+        
+        .transfer-limits {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .transfer-history {
+            margin-top: 50px;
+        }
+        
+        .history-table {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .table-header {
+            background: rgba(67, 97, 238, 0.1);
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+        
+        .table-row {
+            display: flex;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+        }
+        
+        .table-row:last-child {
+            border-bottom: none;
+        }
+        
+        .table-row:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .table-cell {
+            flex: 1;
+            padding: 0 10px;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-success {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .status-pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .status-failed {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- شريط التنبيهات -->
+    <div class="alert-bar">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span>بنك عصمت الحميدي - تحويل الأموال</span>
+                </div>
+                <div>
+                    <a href="dashboard.html" class="btn btn-sm btn-outline-warning">
+                        <i class="fas fa-arrow-right"></i> العودة للرئيسية
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط التنقل -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-university"></i>
+                <span>بنك عصمت الحميدي</span>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="nav-text">
+                        <i class="fas fa-exchange-alt me-2"></i>تحويل الأموال
+                    </span>
+                    <a href="dashboard.html" class="btn btn-sm btn-outline-light">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container main-container py-5">
+        <div class="transfer-container">
+            <!-- معالج التحويل -->
+            <div class="transfer-wizard">
+                <div class="wizard-steps">
+                    <div class="wizard-step">
+                        <div class="step-circle active" id="step1Circle">1</div>
+                        <div class="step-title active">اختيار المستلم</div>
+                    </div>
+                    <div class="wizard-step">
+                        <div class="step-circle" id="step2Circle">2</div>
+                        <div class="step-title">إدخال المبلغ</div>
+                    </div>
+                    <div class="wizard-step">
+                        <div class="step-circle" id="step3Circle">3</div>
+                        <div class="step-title">المراجعة والتحويل</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- نموذج التحويل -->
+            <div class="row">
+                <!-- الخطوة 1: اختيار المستلم -->
+                <div class="col-lg-8">
+                    <div class="transfer-form-section active" id="step1Form">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-user-friends me-2"></i>اختيار المستلم</h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- بحث المستلمين -->
+                                <div class="mb-4">
+                                    <label for="recipientSearch" class="form-label">بحث عن مستلم</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="recipientSearch" 
+                                               placeholder="ابحث بالاسم أو رقم الحساب...">
+                                        <button class="btn btn-outline-secondary" type="button">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- المستلمين المفضلين -->
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="mb-0"><i class="fas fa-star text-warning me-2"></i>المستلمين المفضلين</h6>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="showAddFavoriteModal()">
+                                            <i class="fas fa-plus"></i> إضافة مستلم
+                                        </button>
+                                    </div>
+                                    <div id="favoritesList">
+                                        <div class="text-center py-4">
+                                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                            <p class="text-muted">لا يوجد مستلمين مفضلين</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- إدخال يدوي -->
+                                <div class="mb-4">
+                                    <h6 class="mb-3"><i class="fas fa-keyboard me-2"></i>إدخال يدوي</h6>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="recipientName" class="form-label">اسم المستلم</label>
+                                            <input type="text" class="form-control" id="recipientName" 
+                                                   placeholder="اسم المستلم">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="recipientAccount" class="form-label">رقم الحساب</label>
+                                            <input type="text" class="form-control" id="recipientAccount" 
+                                                   placeholder="رقم الحساب (10 أرقام)">
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="recipientBank" class="form-label">البنك (اختياري)</label>
+                                            <select class="form-select" id="recipientBank">
+                                                <option value="" selected>نفس البنك</option>
+                                                <option value="cby">البنك المركزي اليمني</option>
+                                                <option value="yemen">بنك اليمن والخليج</option>
+                                                <option value="islamic">البنك الإسلامي اليمني</option>
+                                                <option value="other">بنك آخر</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                       <!-- زر التالي -->
+                                <div class="text-end">
+                                    <button class="btn btn-primary" onclick="nextStep(2)">
+                                        التالي <i class="fas fa-arrow-left ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الخطوة 2: إدخال المبلغ -->
+                    <div class="transfer-form-section" id="step2Form">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-money-bill-wave me-2"></i>إدخال المبلغ</h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- معلومات المستلم -->
+                                <div class="mb-4">
+                                    <div class="alert alert-info">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-user-circle fa-2x me-3"></i>
+                                            <div>
+                                                <h6 class="mb-1" id="selectedRecipientName">اسم المستلم</h6>
+                                                <p class="mb-0" id="selectedRecipientAccount">رقم الحساب: --</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- إدخال المبلغ -->
+                                <div class="mb-4">
+                                    <label for="transferAmount" class="form-label">المبلغ المراد تحويله</label>
+                                    <div class="amount-input">
+                                        <span class="currency-symbol">﷼</span>
+                                        <input type="number" class="form-control" id="transferAmount" 
+                                               placeholder="0.00" min="1" step="0.01">
+                                    </div>
+                                    
+                                    <!-- خيارات سريعة -->
+                                    <div class="amount-options">
+                                        <div class="amount-option" data-amount="100">100 ريال</div>
+                                        <div class="amount-option" data-amount="500">500 ريال</div>
+                                        <div class="amount-option" data-amount="1000">1,000 ريال</div>
+                                        <div class="amount-option" data-amount="5000">5,000 ريال</div>
+                                        <div class="amount-option" data-amount="10000">10,000 ريال</div>
+                                    </div>
+                                </div>
+
+                                <!-- حاسبة العمولة -->
+                                <div class="fee-calculator">
+                                    <h6 class="mb-3"><i class="fas fa-calculator me-2"></i>حاسبة العمولة</h6>
+                                    <div class="fee-item">
+                                        <span>المبلغ الأساسي:</span>
+                                        <span id="baseAmount">0.00 ريال</span>
+                                    </div>
+                                    <div class="fee-item">
+                                        <span>عمولة التحويل (0.5%):</span>
+                                        <span id="feeAmount">0.00 ريال</span>
+                                    </div>
+                                    <div class="fee-item fee-total">
+                                        <span>المبلغ الإجمالي:</span>
+                                        <span id="totalAmount">0.00 ريال</span>
+                                    </div>
+                                </div>
+
+                                <!-- أسعار الصرف -->
+                                <div class="exchange-rate">
+                                    <h6 class="text-white mb-3"><i class="fas fa-chart-line me-2"></i>أسعار الصرف</h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small class="opacity-75">الدولار الأمريكي</small>
+                                            <p class="mb-0">1,250.50 ريال</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="opacity-75">الريال السعودي</small>
+                                            <p class="mb-0">333.25 ريال</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- الحدود اليومية -->
+                                <div class="transfer-limits">
+                                    <h6><i class="fas fa-shield-alt me-2"></i>الحدود اليومية</h6>
+                                    <p class="mb-2">الحد اليومي للتحويل: <strong>5,000,000 ريال</strong></p>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar" id="dailyLimitBar" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <small class="text-muted" id="dailyLimitText">المتبقي اليوم: 5,000,000 ريال</small>
+                                </div>
+
+                                <!-- زر التالي -->
+                                <div class="text-end mt-4">
+                                    <button class="btn btn-secondary me-2" onclick="prevStep(1)">
+                                        <i class="fas fa-arrow-right me-2"></i> السابق
+                                    </button>
+                                    <button class="btn btn-primary" onclick="nextStep(3)">
+                                        التالي <i class="fas fa-arrow-left ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الخطوة 3: المراجعة والتحويل -->
+                    <div class="transfer-form-section" id="step3Form">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-check-circle me-2"></i>المراجعة والتحويل</h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- ملخص التحويل -->
+                                <div class="transfer-summary">
+                                    <h6 class="mb-4"><i class="fas fa-file-invoice me-2"></i>ملخص التحويل</h6>
+                                    
+                                    <div class="summary-item">
+                                        <span class="summary-label">اسم المستلم:</span>
+                                        <span class="summary-value" id="summaryRecipientName">--</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">رقم الحساب:</span>
+                                        <span class="summary-value" id="summaryRecipientAccount">--</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">المبلغ الأساسي:</span>
+                                        <span class="summary-value" id="summaryBaseAmount">0.00 ريال</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">عمولة التحويل:</span>
+                                        <span class="summary-value" id="summaryFee">0.00 ريال</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">المبلغ الإجمالي:</span>
+                                        <span class="summary-value text-primary" id="summaryTotalAmount">0.00 ريال</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">الوصف:</span>
+                                        <span class="summary-value" id="summaryDescription">--</span>
+                                    </div>
+                                </div>
+
+                                <!-- إدخال الوصف -->
+                                <div class="mb-4">
+                                    <label for="transferDescription" class="form-label">وصف التحويل (اختياري)</label>
+                                    <textarea class="form-control" id="transferDescription" 
+                                              rows="2" placeholder="أدخل وصفاً للتحويل..."></textarea>
+                                </div>
+
+                                <!-- تحويل OTP -->
+                                <div class="mb-4" id="otpSection">
+                                    <label for="transferOtp" class="form-label">رمز التحقق (OTP)</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="transferOtp" 
+                                               placeholder="أدخل الرمز المكون من 6 أرقام" maxlength="6">
+                                        <button class="btn btn-outline-warning" type="button" id="sendOtpBtn">
+                                            <i class="fas fa-paper-plane"></i> إرسال الرمز
+                                        </button>
+                                    </div>
+                                    <div class="form-text">
+                                        سيتم إرسال رمز التحقق إلى هاتفك المحمول
+                                    </div>
+                                </div>
+
+                                <!-- أزرار التنفيذ -->
+                                <div class="text-end mt-4">
+                                    <button class="btn btn-secondary me-2" onclick="prevStep(2)">
+                                        <i class="fas fa-arrow-right me-2"></i> السابق
+                                    </button>
+                                    <button class="btn btn-success" onclick="executeTransfer()" id="executeBtn">
+                                        <i class="fas fa-check me-2"></i> تأكيد التحويل
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- الشريط الجانبي -->
+                <div class="col-lg-4">
+                    <!-- معلومات الحساب -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-wallet me-2"></i>معلومات حسابك</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <h4 id="userBalanceSidebar">0 ريال</h4>
+                                <p class="text-muted mb-0">الرصيد المتاح</p>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">رقم الحساب:</span>
+                                <span class="info-value" id="userAccountSidebar">--</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">اسم المستخدم:</span>
+                                <span class="info-value" id="userNameSidebar">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- معلومات الإيداع -->
+                    <div class="card border-warning mb-4">
+                        <div class="card-body text-center">
+                            <h6><i class="fas fa-money-bill-wave text-warning me-2"></i>لإيداع الأموال</h6>
+                            <p class="mb-2">قم بالإيداع إلى رقم الحساب:</p>
+                            <div class="h4 text-primary fw-bold">770914162</div>
+                            <p class="text-muted mt-2">
+                                <i class="fas fa-phone me-1"></i> للتواصل: 770914162
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- التحويلات الأخيرة -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-history me-2"></i>آخر التحويلات</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div id="recentTransfers">
+                                <div class="text-center py-4">
+                                    <i class="fas fa-exchange-alt fa-2x text-muted mb-3"></i>
+                                    <p class="text-muted">لا توجد تحويلات سابقة</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- سجل التحويلات -->
+            <div class="transfer-history">
+                <h4 class="mb-4"><i class="fas fa-list me-2"></i>سجل التحويلات</h4>
+                
+                <div class="history-table">
+                    <div class="table-header">
+                        <div class="row">
+                            <div class="col-3">التاريخ</div>
+                            <div class="col-3">المستلم</div>
+                            <div class="col-2">المبلغ</div>
+                            <div class="col-2">الحالة</div>
+                            <div class="col-2">رقم المرجع</div>
+                        </div>
+                    </div>
+                    <div id="transfersList">
+                        <div class="table-row">
+                            <div class="col-3">--</div>
+                            <div class="col-3">--</div>
+                            <div class="col-2">--</div>
+                            <div class="col-2">--</div>
+                            <div class="col-2">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الفوتر -->
+    <footer class="footer py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-3">
+                    <h5><i class="fas fa-university"></i> بنك عصمت الحميدي</h5>
+                    <p class="footer-text">
+                        نحو مستقبل مالي آمن ومستقر لجميع العملاء.
+                    </p>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <h5><i class="fas fa-headset"></i> الدعم والمساعدة</h5>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-phone"></i> 770914162</p>
+                        <p><i class="fas fa-clock"></i> السبت - الخميس: 8:00 ص - 4:00 م</p>
+                        <p><i class="fas fa-map-marker-alt"></i> اليمن - لحج - العند</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="text-center">
+                <p class="mb-0">
+                    &copy; 2026 بنك عصمت الحميدي. جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal إضافة مستلم مفضل -->
+    <div class="modal fade" id="addFavoriteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة مستلم مفضل</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addFavoriteForm">
+                        <div class="mb-3">
+                            <label for="favoriteName" class="form-label">اسم المستلم</label>
+                            <input type="text" class="form-control" id="favoriteName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="favoriteAccount" class="form-label">رقم الحساب</label>
+                            <input type="text" class="form-control" id="favoriteAccount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="favoriteBank" class="form-label">البنك (اختياري)</label>
+                            <select class="form-select" id="favoriteBank">
+                                <option value="" selected>نفس البنك</option>
+                                <option value="cby">البنك المركزي اليمني</option>
+                                <option value="yemen">بنك اليمن والخليج</option>
+                                <option value="islamic">البنك الإسلامي اليمني</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" onclick="addFavorite()">إضافة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        let currentStep = 1;
+        let currentUser = null;
+        let selectedRecipient = null;
+        let transferAmount = 0;
+        let transferFee = 0;
+        let transferTotal = 0;
+        let generatedOTP = '';
+        let dailyLimit = 5000000;
+        let dailyUsed = 0;
+
+        // تهيئة عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            loadUserData();
+            loadFavorites();
+            loadRecentTransfers();
+            loadTransferHistory();
+            setupEventListeners();
+        });
+
+        // التحقق من المصادقة
+        function checkAuthentication() {
+            currentUser = BankSystem.getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // تحميل بيانات المستخدم
+        function loadUserData() {
+            if (!currentUser) return;
+
+            document.getElementById('userBalanceSidebar').textContent = formatCurrency(currentUser.balance);
+            document.getElementById('userAccountSidebar').textContent = currentUser.accountNumber || '--';
+            document.getElementById('userNameSidebar').textContent = currentUser.fullName || '--';
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // البحث عن المستلمين
+            document.getElementById('recipientSearch').addEventListener('input', searchRecipients);
+            
+            // تحديث المبلغ والعمولة
+            document.getElementById('transferAmount').addEventListener('input', updateAmount);
+            
+            // خيارات المبالغ السريعة
+            document.querySelectorAll('.amount-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectAmount(this.dataset.amount);
+                });
+            });
+            
+            // إرسال OTP
+            document.getElementById('sendOtpBtn').addEventListener('click', sendTransferOTP);
+            
+            // تحديث الوصف
+            document.getElementById('transferDescription').addEventListener('input', updateDescription);
+        }
+
+        // الانتقال للخطوة التالية
+        function nextStep(step) {
+            if (!validateCurrentStep()) return;
+            
+            // تحديث الخطوة الحالية
+            currentStep = step;
+            
+            // تحديث مؤشر التقدم
+            updateWizardSteps();
+            
+            // إخفاء جميع النماذج
+            document.querySelectorAll('.transfer-form-section').forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+            });
+            
+            // إظهار النموذج الحالي
+            const currentForm = document.getElementById(`step${step}Form`);
+            if (currentForm) {
+                currentForm.style.display = 'block';
+                setTimeout(() => {
+                    currentForm.classList.add('active');
+                }, 10);
+            }
+            
+            // تحميل بيانات الخطوة
+            if (step === 2) {
+                loadStep2Data();
+            } else if (step === 3) {
+                loadStep3Data();
+            }
+        }
+
+        // العودة للخطوة السابقة
+        function prevStep(step) {
+            currentStep = step;
+            updateWizardSteps();
+            
+            // إخفاء جميع النماذج
+            document.querySelectorAll('.transfer-form-section').forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+            });
+            
+            // إظهار النموذج الحالي
+            const currentForm = document.getElementById(`step${step}Form`);
+            if (currentForm) {
+                currentForm.style.display = 'block';
+                setTimeout(() => {
+                    currentForm.classList.add('active');
+                }, 10);
+            }
+        }
+
+        // تحديث مؤشر التقدم
+        function updateWizardSteps() {
+            for (let i = 1; i <= 3; i++) {
+                const circle = document.getElementById(`step${i}Circle`);
+                const title = document.querySelector(`.wizard-step:nth-child(${i}) .step-title`);
+                
+                if (circle && title) {
+                    circle.classList.remove('active', 'completed');
+                    title.classList.remove('active');
+                    
+                    if (i < currentStep) {
+                        circle.classList.add('completed');
+                    } else if (i === currentStep) {
+                        circle.classList.add('active');
+                        title.classList.add('active');
+                    }
+                }
+            }
+        }
+
+        // التحقق من صحة الخطوة الحالية
+        function validateCurrentStep() {
+            switch(currentStep) {
+                case 1:
+                    return validateStep1();
+                case 2:
+                    return validateStep2();
+                case 3:
+                    return validateStep3();
+                default:
+                    return true;
+            }
+        }
+
+        // التحقق من الخطوة 1
+        function validateStep1() {
+            const recipientName = document.getElementById('recipientName').value;
+            const recipientAccount = document.getElementById('recipientAccount').value;
+            
+            if (!recipientName || !recipientAccount) {
+                showToast('يرجى إدخال بيانات المستلم', 'error');
+                return false;
+            }
+            
+            if (recipientAccount.length !== 10) {
+                showToast('رقم الحساب يجب أن يكون 10 أرقام', 'error');
+                return false;
+            }
+            // حفظ بيانات المستلم
+            selectedRecipient = {
+                name: recipientName,
+                account: recipientAccount,
+                bank: document.getElementById('recipientBank').value
+            };
+            
+            return true;
+        }
+
+        // التحقق من الخطوة 2
+        function validateStep2() {
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            
+            if (!amount || amount <= 0) {
+                showToast('يرجى إدخال مبلغ صحيح', 'error');
+                return false;
+            }
+            
+            if (amount > currentUser.balance) {
+                showToast('الرصيد غير كافي', 'error');
+                return false;
+            }
+            
+            // التحقق من الحد اليومي
+            if (dailyUsed + amount > dailyLimit) {
+                showToast('تجاوزت الحد اليومي للتحويلات', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // التحقق من الخطوة 3
+        function validateStep3() {
+            const otp = document.getElementById('transferOtp').value;
+            
+            if (currentUser.otpEnabled && (!otp || otp.length !== 6)) {
+                showToast('يرجى إدخال رمز التحقق', 'error');
+                return false;
+            }
+            
+            if (currentUser.otpEnabled && otp !== generatedOTP) {
+                showToast('رمز التحقق غير صحيح', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // تحميل بيانات الخطوة 2
+        function loadStep2Data() {
+            if (!selectedRecipient) return;
+            
+            document.getElementById('selectedRecipientName').textContent = selectedRecipient.name;
+            document.getElementById('selectedRecipientAccount').textContent = `رقم الحساب: ${selectedRecipient.account}`;
+            
+            // حساب الحدود اليومية
+            calculateDailyLimit();
+        }
+
+        // تحميل بيانات الخطوة 3
+        function loadStep3Data() {
+            if (!selectedRecipient) return;
+            
+            document.getElementById('summaryRecipientName').textContent = selectedRecipient.name;
+            document.getElementById('summaryRecipientAccount').textContent = selectedRecipient.account;
+            document.getElementById('summaryBaseAmount').textContent = formatCurrency(transferAmount);
+            document.getElementById('summaryFee').textContent = formatCurrency(transferFee);
+            document.getElementById('summaryTotalAmount').textContent = formatCurrency(transferTotal);
+            
+            // إرسال OTP تلقائياً
+            if (currentUser.otpEnabled) {
+                sendTransferOTP();
+            }
+        }
+
+        // بحث المستلمين
+        function searchRecipients() {
+            const searchTerm = document.getElementById('recipientSearch').value.toLowerCase();
+            // سيتم تنفيذ البحث في نسخة حقيقية
+        }
+
+        // تحميل المستلمين المفضلين
+        function loadFavorites() {
+            const favorites = JSON.parse(localStorage.getItem('favoriteRecipients')) || [];
+            const container = document.getElementById('favoritesList');
+            
+            if (favorites.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">لا يوجد مستلمين مفضلين</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            favorites.forEach(fav => {
+                html += `
+                    <div class="recipient-card" onclick="selectFavorite('${fav.accountNumber}')">
+                        <div class="d-flex align-items-center">
+                            <img src="${fav.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(fav.name) + '&background=random'}" 
+                                 class="recipient-avatar">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">${fav.name}</h6>
+                                <p class="text-muted mb-0">${fav.accountNumber}</p>
+                            </div>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // اختيار مستلم مفضل
+        function selectFavorite(accountNumber) {
+            const favorites = JSON.parse(localStorage.getItem('favoriteRecipients')) || [];
+            const favorite = favorites.find(f => f.accountNumber === accountNumber);
+            
+            if (favorite) {
+                selectedRecipient = {
+                    name: favorite.name,
+                    account: favorite.accountNumber,
+                    bank: favorite.bank || ''
+                };
+                
+                // تعبئة النموذج
+                document.getElementById('recipientName').value = favorite.name;
+                document.getElementById('recipientAccount').value = favorite.accountNumber;
+                
+                // تمييز البطاقة المختارة
+                document.querySelectorAll('.recipient-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                event.currentTarget.classList.add('selected');
+                
+                showToast(`تم اختيار ${favorite.name}`, 'success');
+            }
+        }
+
+        // إظهار modal إضافة مستلم مفضل
+        function showAddFavoriteModal() {
+            const modal = new bootstrap.Modal(document.getElementById('addFavoriteModal'));
+            modal.show();
+        }
+
+        // إضافة مستلم مفضل
+        function addFavorite() {
+            const name = document.getElementById('favoriteName').value;
+            const account = document.getElementById('favoriteAccount').value;
+            const bank = document.getElementById('favoriteBank').value;
+            
+            if (!name || !account) {
+                showToast('يرجى إدخال جميع البيانات', 'error');
+                return;
+            }
+            
+            if (account.length !== 10) {
+                showToast('رقم الحساب يجب أن يكون 10 أرقام', 'error');
+                return;
+            }
+            
+            let favorites = JSON.parse(localStorage.getItem('favoriteRecipients')) || [];
+            
+            // التحقق من التكرار
+            if (favorites.some(f => f.accountNumber === account)) {
+                showToast('المستلم موجود بالفعل في المفضلة', 'warning');
+                return;
+            }
+            
+            favorites.push({
+                name,
+                accountNumber: account,
+                bank,
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`,
+                addedAt: new Date().toISOString()
+            });
+            
+            localStorage.setItem('favoriteRecipients', JSON.stringify(favorites));
+            
+            // إغلاق النموذج
+            bootstrap.Modal.getInstance(document.getElementById('addFavoriteModal')).hide();
+            
+            // إعادة تحميل القائمة
+            loadFavorites();
+            
+            showToast('تم إضافة المستلم إلى المفضلة', 'success');
+        }
+
+        // تحديث المبلغ والعمولة
+        function updateAmount() {
+            const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
+            transferAmount = amount;
+            
+            // حساب العمولة (0.5%)
+            transferFee = amount * 0.005;
+            transferTotal = amount + transferFee;
+            
+            // تحديث العرض
+            document.getElementById('baseAmount').textContent = formatCurrency(amount);
+            document.getElementById('feeAmount').textContent = formatCurrency(transferFee);
+            document.getElementById('totalAmount').textContent = formatCurrency(transferTotal);
+            
+            // تحديث شريط الحد اليومي
+            updateDailyLimitBar();
+        }
+
+        // اختيار مبلغ سريع
+        function selectAmount(amount) {
+            document.getElementById('transferAmount').value = amount;
+            updateAmount();
+            
+            // تمييز الخيار المختار
+            document.querySelectorAll('.amount-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        // تحديث شريط الحد اليومي
+        function updateDailyLimitBar() {
+            const totalToday = dailyUsed + transferAmount;
+            const percentage = (totalToday / dailyLimit) * 100;
+            
+            document.getElementById('dailyLimitBar').style.width = `${Math.min(percentage, 100)}%`;
+            
+            if (percentage >= 90) {
+                document.getElementById('dailyLimitBar').classList.remove('bg-success', 'bg-warning');
+                document.getElementById('dailyLimitBar').classList.add('bg-danger');
+            } else if (percentage >= 70) {
+                document.getElementById('dailyLimitBar').classList.remove('bg-success', 'bg-danger');
+                document.getElementById('dailyLimitBar').classList.add('bg-warning');
+            } else {
+                document.getElementById('dailyLimitBar').classList.remove('bg-warning', 'bg-danger');
+                document.getElementById('dailyLimitBar').classList.add('bg-success');
+            }
+            
+            const remaining = dailyLimit - totalToday;
+            document.getElementById('dailyLimitText').textContent = `المتبقي اليوم: ${formatCurrency(remaining)}`;
+        }
+
+        // حساب الحد اليومي
+        function calculateDailyLimit() {
+            // محاكاة حساب التحويلات اليومية
+            dailyUsed = Math.floor(Math.random() * 2000000); // قيمة عشوائية للعرض
+            updateDailyLimitBar();
+        }
+
+        // تحديث الوصف
+        function updateDescription() {
+            const description = document.getElementById('transferDescription').value;
+            document.getElementById('summaryDescription').textContent = description || '--';
+        }
+
+        // إرسال OTP للتحويل
+        function sendTransferOTP() {
+            if (!currentUser.otpEnabled) return;
+            
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            console.log(`Transfer OTP: ${generatedOTP}`);
+            
+            showToast('تم إرسال رمز التحقق إلى هاتفك', 'success');
+            
+            // تعطيل زر الإرسال لمدة 60 ثانية
+            const sendBtn = document.getElementById('sendOtpBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-clock"></i> انتظر 60 ثانية';
+            
+            let timeLeft = 60;
+            const timer = setInterval(() => {
+                timeLeft--;
+                sendBtn.innerHTML = `<i class="fas fa-clock"></i> انتظر ${timeLeft} ثانية`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    sendBtn.disabled = false;
+                    sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرمز';
+                }
+            }, 1000);
+        }
+
+        // تنفيذ التحويل
+        function executeTransfer() {
+            if (!validateCurrentStep()) return;
+            
+            const description = document.getElementById('transferDescription').value || 'تحويل أموال';
+            
+            try {
+                const result = BankSystem.transferMoney(
+                    currentUser.accountNumber,
+                    selectedRecipient.account,
+                    transferAmount,
+                    description
+                );
+                
+                if (result) {
+                    // تحديث الرصيد
+                    currentUser.balance -= transferTotal;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // تحديث الواجهة
+                    loadUserData();
+                    
+                    // إظهار رسالة النجاح
+                    showToast('تم التحويل بنجاح!', 'success');
+                     // تسجيل النشاط
+                    BankSystem.logActivity(currentUser.id, 'transfer', 
+                        `تحويل ${formatCurrency(transferAmount)} إلى ${selectedRecipient.name}`);
+                    
+                    // إعادة تحميل البيانات
+                    setTimeout(() => {
+                        loadRecentTransfers();
+                        loadTransferHistory();
+                        resetForm();
+                    }, 2000);
+                }
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // إعادة تعيين النموذج
+        function resetForm() {
+            // العودة للخطوة الأولى
+            currentStep = 1;
+            updateWizardSteps();
+            
+            // إخفاء جميع النماذج
+            document.querySelectorAll('.transfer-form-section').forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+            });
+            
+            // إظهار النموذج الأول
+            document.getElementById('step1Form').style.display = 'block';
+            document.getElementById('step1Form').classList.add('active');
+            
+            // إعادة تعيين الحقول
+            document.getElementById('recipientName').value = '';
+            document.getElementById('recipientAccount').value = '';
+            document.getElementById('transferAmount').value = '';
+            document.getElementById('transferDescription').value = '';
+            document.getElementById('transferOtp').value = '';
+            
+            // إعادة تعيين المتغيرات
+            selectedRecipient = null;
+            transferAmount = 0;
+            transferFee = 0;
+            transferTotal = 0;
+            generatedOTP = '';
+        }
+
+        // تحميل التحويلات الأخيرة
+        function loadRecentTransfers() {
+            const container = document.getElementById('recentTransfers');
+            const transfers = BankSystem.getTransactions(currentUser.id, 5)
+                .filter(t => t.type === 'transfer');
+            
+            if (transfers.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fas fa-exchange-alt fa-2x text-muted mb-3"></i>
+                        <p class="text-muted">لا توجد تحويلات سابقة</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            transfers.forEach(transfer => {
+                const amountClass = transfer.amount < 0 ? 'text-danger' : 'text-success';
+                const amountSign = transfer.amount < 0 ? '-' : '+';
+                
+                html += `
+                    <div class="border-bottom p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">تحويل أموال</h6>
+                                <small class="text-muted">${new Date(transfer.timestamp).toLocaleDateString('ar-SA')}</small>
+                            </div>
+                            <div class="text-end">
+                                <h6 class="mb-0 ${amountClass}">${amountSign}${formatCurrency(Math.abs(transfer.amount))}</h6>
+                                <span class="badge bg-success">مكتمل</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // تحميل سجل التحويلات
+        function loadTransferHistory() {
+            const container = document.getElementById('transfersList');
+            const transfers = BankSystem.getTransactions(currentUser.id, 10)
+                .filter(t => t.type === 'transfer');
+            
+            if (transfers.length === 0) {
+                container.innerHTML = `
+                    <div class="table-row">
+                        <div class="col-12 text-center py-4">
+                            <p class="text-muted mb-0">لا توجد تحويلات سابقة</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            transfers.forEach(transfer => {
+                const status = 'مكتمل';
+                const statusClass = 'status-success';
+                
+                html += `
+                    <div class="table-row">
+                        <div class="col-3">${new Date(transfer.timestamp).toLocaleDateString('ar-SA')}</div>
+                        <div class="col-3">تحويل خارجي</div>
+                        <div class="col-2 text-danger">-${formatCurrency(Math.abs(transfer.amount))}</div>
+                        <div class="col-2"><span class="status-badge ${statusClass}">${status}</span></div>
+                        <div class="col-2">${transfer.id}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // أدوات مساعدة
+        function formatCurrency(amount) {
+            return amount.toLocaleString('ar-SA') + ' ريال';
+        }
+
+        function showToast(message, type = 'info') {
+            BankSystem.showToast(message, type);
+        }
+    </script>
+</body>
+</html>
+```

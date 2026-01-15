@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي - بنك عصمت الحميدي</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .profile-sidebar {
+            position: sticky;
+            top: 20px;
+        }
+        
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary-color);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.3);
+        }
+        
+        .avatar-upload {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .avatar-upload-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .avatar-upload-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            background: rgba(67, 97, 238, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .tab-content {
+            margin-top: 30px;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--gray-color);
+            border: none;
+            padding: 15px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background: transparent;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            color: var(--gray-color);
+            font-weight: 500;
+        }
+        
+        .info-value {
+            font-weight: 600;
+        }
+        
+        .edit-btn {
+            padding: 5px 15px;
+            font-size: 0.9rem;
+        }
+        
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .security-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .security-info {
+            flex: 1;
+        }
+        
+        .security-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .security-description {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .activity-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .activity-details {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .activity-time {
+            color: var(--gray-color);
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        
+        .preference-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .preference-item:last-child {
+            border-bottom: none;
+        }
+        
+        .preference-info {
+            flex: 1;
+        }
+        
+        .preference-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .preference-description {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- شريط التنبيهات -->
+    <div class="alert-bar">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span>بنك عصمت الحميدي - الملف الشخصي</span>
+                </div>
+                <div>
+                    <a href="dashboard.html" class="btn btn-sm btn-outline-warning">
+                        <i class="fas fa-arrow-right"></i> العودة للرئيسية
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط التنقل -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-university"></i>
+                <span>بنك عصمت الحميدي</span>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="nav-text">
+                        <i class="fas fa-user me-2"></i>الملف الشخصي
+                    </span>
+                    <a href="dashboard.html" class="btn btn-sm btn-outline-light">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container main-container py-5">
+        <div class="profile-container">
+            <div class="row">
+                <!-- الشريط الجانبي -->
+                <div class="col-lg-4 mb-4">
+                    <div class="profile-sidebar">
+                        <!-- بطاقة المستخدم -->
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <div class="avatar-upload">
+                                    <img src="https://ui-avatars.com/api/?name=مستخدم&background=random&size=150" 
+                                         alt="صورة المستخدم" 
+                                         class="profile-avatar" 
+                                         id="profileAvatar">
+                                    <button class="avatar-upload-btn" onclick="document.getElementById('avatarInput').click()">
+                                        <i class="fas fa-camera"></i>
+                                    </button>
+                                    <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="uploadAvatar(event)">
+                                </div>
+                                <h3 id="userFullName">محمد أحمد</h3>
+                                <p class="text-muted" id="userRole">مستخدم</p>
+                            </div>
+                            
+                            <div class="profile-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value" id="accountBalance">0</div>
+                                    <div class="stat-label">الرصيد الحالي</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="totalTransactions">0</div>
+                                    <div class="stat-label">عدد المعاملات</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="accountAge">0</div>
+                                    <div class="stat-label">أيام في البنك</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-section">
+                                <h6 class="section-title mb-3"><i class="fas fa-info-circle me-2"></i>معلومات سريعة</h6>
+                                <div class="info-item">
+                                    <span class="info-label">رقم الحساب:</span>
+                                    <span class="info-value" id="accountNumber">--</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">تاريخ الإنشاء:</span>
+                                    <span class="info-value" id="createdAt">--</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">آخر دخول:</span>
+                                    <span class="info-value" id="lastLogin">--</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">الحالة:</span>
+                                    <span class="badge bg-success" id="accountStatus">نشط</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- معلومات الإيداع -->
+                        <div class="profile-card bg-warning bg-opacity-10 border-warning">
+                            <h6><i class="fas fa-money-bill-wave text-warning me-2"></i>لإيداع الأموال</h6>
+                            <p class="mb-2">قم بالإيداع إلى رقم الحساب:</p>
+                            <div class="display-6 text-primary fw-bold">770914162</div>
+                            <p class="text-muted mt-2">
+                                <i class="fas fa-phone me-1"></i> للتواصل: 770914162
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- المحتوى الرئيسي -->
+                <div class="col-lg-8">
+                    <!-- علامات التبويب -->
+                    <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button">
+                                <i class="fas fa-user me-2"></i>المعلومات الشخصية
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button">
+                                <i class="fas fa-shield-alt me-2"></i>الأمان
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button">
+                                <i class="fas fa-history me-2"></i>سجل النشاط
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="preferences-tab" data-bs-toggle="tab" data-bs-target="#preferences" type="button">
+                                <i class="fas fa-cog me-2"></i>التفضيلات
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <!-- محتوى علامات التبويب -->
+                    <div class="tab-content" id="profileTabsContent">
+                        <!-- علامة التبويب: المعلومات الشخصية -->
+                        <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                            <div class="profile-card">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="mb-0">المعلومات الشخصية</h5>
+                                    <button class="btn btn-primary" onclick="editPersonalInfo()">
+                                        <i class="fas fa-edit me-2"></i>تعديل
+                                    </button>
+                                </div>
+                                
+                                <div class="info-section">
+                                    <div class="info-item">
+                                        <span class="info-label">الاسم الكامل:</span>
+                                        <span class="info-value" id="profileFullName">--</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">رقم الهوية:</span>
+                                        <span class="info-value" id="profileNationalId">--</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">تاريخ الميلاد:</span>
+                                        <span class="info-value" id="profileBirthDate">--</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">البريد الإلكتروني:</span>
+                                        <span class="info-value" id="profileEmail">--</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">رقم الهاتف:</span>
+                                        <span class="info-value" id="profilePhone">--</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">العنوان:</span>
+                                        <span class="info-value" id="profileAddress">--</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">نوع الحساب:</span>
+                                        <span class="info-value" id="profileAccountType">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- تغيير كلمة المرور -->
+                     <div class="profile-card">
+                                <h5 class="mb-4"><i class="fas fa-key me-2"></i>تغيير كلمة المرور</h5>
+                                <form id="changePasswordForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="currentPassword" class="form-label">كلمة المرور الحالية</label>
+                                            <div class="password-input">
+                                                <input type="password" class="form-control" id="currentPassword" required>
+                                                <button type="button" class="password-toggle" onclick="togglePassword('currentPassword')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="newPassword" class="form-label">كلمة المرور الجديدة</label>
+                                            <div class="password-input">
+                                                <input type="password" class="form-control" id="newPassword" minlength="8" required>
+                                                <button type="button" class="password-toggle" onclick="togglePassword('newPassword')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="confirmNewPassword" class="form-label">تأكيد كلمة المرور</label>
+                                            <div class="password-input">
+                                                <input type="password" class="form-control" id="confirmNewPassword" required>
+                                                <button type="button" class="password-toggle" onclick="togglePassword('confirmNewPassword')">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fas fa-save me-2"></i>حفظ التغييرات
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- علامة التبويب: الأمان -->
+                        <div class="tab-pane fade" id="security" role="tabpanel">
+                            <div class="profile-card">
+                                <h5 class="mb-4"><i class="fas fa-shield-alt me-2"></i>إعدادات الأمان</h5>
+                                
+                                <div class="security-settings">
+                                    <div class="security-item">
+                                        <div class="security-info">
+                                            <div class="security-title">التحقق بخطوتين (OTP)</div>
+                                            <div class="security-description">تفعيل إرسال رمز التحقق عبر SMS لتسجيل الدخول</div>
+                                        </div>
+                                        <div class="security-action">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="otpSwitch" checked>
+                                                <label class="form-check-label" for="otpSwitch"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="security-item">
+                                        <div class="security-info">
+                                            <div class="security-title">إشعارات تسجيل الدخول</div>
+                                            <div class="security-description">إرسال إشعار عند تسجيل الدخول من جهاز جديد</div>
+                                        </div>
+                                        <div class="security-action">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="loginNotifySwitch" checked>
+                                                <label class="form-check-label" for="loginNotifySwitch"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="security-item">
+                                        <div class="security-info">
+                                            <div class="security-title">جلسات نشطة</div>
+                                            <div class="security-description">عرض وإدارة الجلسات النشطة</div>
+                                        </div>
+                                        <div class="security-action">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="viewActiveSessions()">
+                                                <i class="fas fa-eye me-1"></i>عرض
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="security-item">
+                                        <div class="security-info">
+                                            <div class="security-title">عنوان IP المسجل</div>
+                                            <div class="security-description" id="lastLoginIp">192.168.1.100</div>
+                                        </div>
+                                        <div class="security-action">
+                                            <span class="badge bg-info">آخر دخول</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="security-item">
+                                        <div class="security-info">
+                                            <div class="security-title">جهاز الدخول</div>
+                                            <div class="security-description" id="lastLoginDevice">Chrome على Windows</div>
+                                        </div>
+                                        <div class="security-action">
+                                            <span class="badge bg-secondary">متعرف</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- سجل محاولات الدخول -->
+                            <div class="profile-card">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>سجل محاولات الدخول</h5>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="refreshLoginHistory()">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                                
+                                <div id="loginHistory">
+                                    <div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">جارٍ التحميل...</span>
+                                        </div>
+                                        <p class="mt-2 text-muted">جارٍ تحميل سجل الدخول...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- علامة التبويب: سجل النشاط -->
+                        <div class="tab-pane fade" id="activity" role="tabpanel">
+                            <div class="profile-card">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>سجل النشاط</h5>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary active" onclick="filterActivity('all')">الكل</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="filterActivity('login')">الدخول</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="filterActivity('transaction')">المعاملات</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="filterActivity('security')">الأمان</button>
+                                    </div>
+                                </div>
+                                
+                                <div id="activityLog">
+                                    <div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">جارٍ التحميل...</span>
+                                        </div>
+                                        <p class="mt-2 text-muted">جارٍ تحميل سجل النشاط...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- علامة التبويب: التفضيلات -->
+                        <div class="tab-pane fade" id="preferences" role="tabpanel">
+                            <div class="profile-card">
+                                <h5 class="mb-4"><i class="fas fa-cog me-2"></i>إعدادات التفضيلات</h5>
+                                
+                                <div class="preferences-settings">
+                                    <div class="preference-item">
+                                        <div class="preference-info">
+                                            <div class="preference-title">اللغة</div>
+                                            <div class="preference-description">اختر لغة الواجهة المفضلة</div>
+                                        </div>
+                                        <div class="preference-action">
+                                            <select class="form-select form-select-sm" id="languageSelect" style="width: 150px;">
+                                                <option value="ar" selected>العربية</option>
+                                                <option value="en">English</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="preference-item">
+                                        <div class="preference-info">
+                                            <div class="preference-title">الوضع</div>
+                                            <div class="preference-description">اختر الوضع المفضل (ليلي/نهاري)</div>
+                                        </div>
+                                        <div class="preference-action">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="themeSwitch">
+                                                <label class="form-check-label" for="themeSwitch">الوضع الليلي</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="preference-item">
+                                        <div class="preference-info">
+                                            <div class="preference-title">إشعارات البريد الإلكتروني</div>
+                                            <div class="preference-description">تلقي إشعارات على بريدك الإلكتروني</div>
+                                        </div>
+                                        <div class="preference-action">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="emailNotifySwitch" checked>
+                                                <label class="form-check-label" for="emailNotifySwitch"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="preference-item">
+                                        <div class="preference-info">
+                                            <div class="preference-title">إشعارات SMS</div>
+                                            <div class="preference-description">تلقي إشعارات عبر الرسائل النصية</div>
+                                        </div>
+                                        <div class="preference-action">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="smsNotifySwitch" checked>
+                                                <label class="form-check-label" for="smsNotifySwitch"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="preference-item">
+                                        <div class="preference-info">
+                                            <div class="preference-title">إشعارات الدفع</div>
+                                            <div class="preference-description">تلقي إشعارات عند إتمام المعاملات</div>
+                                        </div>
+                                        <div class="preference-action">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="paymentNotifySwitch" checked>
+                                                <label class="form-check-label" for="paymentNotifySwitch"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="preference-item">
+                                        <div class="preference-info">
+                                            <div class="preference-title">إشعارات الأمان</div>
+                                            <div class="preference-description">تلقي إشعارات عن الأنشطة الأمنية</div>
+                                        </div>
+                                        <div class="preference-action">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="securityNotifySwitch" checked>
+                                                <label class="form-check-label" for="securityNotifySwitch"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <button class="btn btn-primary" onclick="savePreferences()">
+                                        <i class="fas fa-save me-2"></i>حفظ التفضيلات
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- تصدير البيانات -->
+                            <div class="profile-card">
+                                <h5 class="mb-4"><i class="fas fa-download me-2"></i>تصدير البيانات</h5>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card border-primary h-100">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                                                <h6>كشف حساب PDF</h6>
+                                                <p class="text-muted small">تصدير كشف حساب بصيغة PDF</p>
+                                                <button class="btn btn-outline-danger w-100" onclick="exportPDF()">
+                                                    <i class="fas fa-download me-2"></i>تصدير PDF
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card border-success h-100">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-file-excel fa-3x text-success mb-3"></i>
+                                                <h6>بيانات Excel</h6>
+                                                <p class="text-muted small">تصدير البيانات بصيغة Excel</p>
+                                                <button class="btn btn-outline-success w-100" onclick="exportExcel()">
+                                                    <i class="fas fa-download me-2"></i>تصدير Excel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- الفوتر -->
+    <footer class="footer py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-3">
+                    <h5><i class="fas fa-university"></i> بنك عصمت الحميدي</h5>
+                    <p class="footer-text">
+                        نحو مستقبل مالي آمن ومستقر لجميع العملاء.
+                    </p>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <h5><i class="fas fa-headset"></i> الدعم والمساعدة</h5>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-phone"></i> 770914162</p>
+                        <p><i class="fas fa-clock"></i> السبت - الخميس: 8:00 ص - 4:00 م</p>
+                        <p><i class="fas fa-map-marker-alt"></i> اليمن - لحج - العند</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="text-center">
+                <p class="mb-0">
+                    &copy; 2026 بنك عصمت الحميدي. جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal تعديل المعلومات -->
+    <div class="modal fade" id="editPersonalModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل المعلومات الشخصية</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPersonalForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editFullName" class="form-label">الاسم الكامل</label>
+                                <input type="text" class="form-control" id="editFullName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editEmail" class="form-label">البريد الإلكتروني</label>
+                                <input type="email" class="form-control" id="editEmail" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editPhone" class="form-label">رقم الهاتف</label>
+                                <input type="tel" class="form-control" id="editPhone" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editAddress" class="form-label">العنوان</label>
+                                <input type="text" class="form-control" id="editAddress" required>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="editBio" class="form-label">نبذة شخصية</label>
+                                <textarea class="form-control" id="editBio" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" onclick="savePersonalInfo()">حفظ التغييرات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal الجلسات النشطة -->
+    <div class="modal fade" id="sessionsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">الجلسات النشطة</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="sessionsList">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">جارٍ التحميل...</span>
+                            </div>
+                            <p class="mt-2 text-muted">جارٍ تحميل الجلسات...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="terminateAllSessions()">
+                        <i class="fas fa-sign-out-alt me-2"></i>إنهاء جميع الجلسات
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        let currentUser = null;
+        let activityLog = [];
+
+        // تهيئة عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            loadUserData();
+            setupEventListeners();
+            loadLoginHistory();
+            loadActivityLog();
+        });
+
+        // التحقق من المصادقة
+        function checkAuthentication() {
+            currentUser = BankSystem.getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // تحميل بيانات المستخدم
+        function loadUserData() {
+            if (!currentUser) return;
+
+            // تحديث المعلومات الأساسية
+            document.getElementById('userFullName').textContent = currentUser.fullName || 'مستخدم';
+            document.getElementById('userRole').textContent = currentUser.role === 'admin' ? 'مدير' : 'مستخدم';
+            document.getElementById('accountBalance').textContent = formatCurrency(currentUser.balance);
+            document.getElementById('accountNumber').textContent = currentUser.accountNumber || '--';
+            document.getElementById('createdAt').textContent = currentUser.createdAt ? 
+                new Date(currentUser.createdAt).toLocaleDateString('ar-SA') : '--';
+            document.getElementById('lastLogin').textContent = currentUser.lastLogin ? 
+                new Date(currentUser.lastLogin).toLocaleString('ar-SA') : 'أول دخول';
+            
+            // تحديث الملف الشخصي
+            document.getElementById('profileFullName').textContent = currentUser.fullName || '--';
+            document.getElementById('profileNationalId').textContent = currentUser.nationalId || '--';
+            document.getElementById('profileBirthDate').textContent = currentUser.birthDate || '--';
+            document.getElementById('profileEmail').textContent = currentUser.email || '--';
+            document.getElementById('profilePhone').textContent = currentUser.phone || '--';
+            document.getElementById('profileAddress').textContent = currentUser.address || '--';
+            document.getElementById('profileAccountType').textContent = getAccountType(currentUser.accountType);
+            
+            // تحديث الصورة
+            const avatar = document.getElementById('profileAvatar');
+            if (currentUser.avatar) {
+                avatar.src = currentUser.avatar;
+            } else {
+                avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.fullName)}&background=random&size=150`;
+            }
+
+            // تحديث الإحصائيات
+            updateStatistics();
+            
+            // تحديث التفضيلات
+            loadPreferences();
+        }
+
+        // تحديث الإحصائيات
+        function updateStatistics() {
+            // عدد المعاملات
+            const transactions = BankSystem.getTransactions(currentUser.id);
+            document.getElementById('totalTransactions').textContent = transactions.length;
+            
+            // حساب عمر الحساب
+            if (currentUser.createdAt) {
+                const created = new Date(currentUser.createdAt);
+                const now = new Date();
+                const diffTime = Math.abs(now - created);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('accountAge').textContent = diffDays;
+            }
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // تغيير كلمة المرور
+            document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                changePassword();
+            });
+            
+            // تحميل الملف الشخصي
+            document.getElementById('otpSwitch').addEventListener('change', updateSecuritySettings);
+            document.getElementById('loginNotifySwitch').addEventListener('change', updateSecuritySettings);
+            
+            // التفضيلات
+            document.getElementById('themeSwitch').addEventListener('change', updateThemePreference);
+            document.getElementById('languageSelect').addEventListener('change', updateLanguagePreference);
+        }
+
+        // تعديل المعلومات الشخصية
+        function editPersonalInfo() {
+            const modal = new bootstrap.Modal(document.getElementById('editPersonalModal'));
+            
+            // تعبئة النموذج بالبيانات الحالية
+            document.getElementById('editFullName').value = currentUser.fullName || '';
+            document.getElementById('editEmail').value = currentUser.email || '';
+            document.getElementById('editPhone').value = currentUser.phone || '';
+            document.getElementById('editAddress').value = currentUser.address || '';
+            document.getElementById('editBio').value = currentUser.bio || '';
+            
+            modal.show();
+        }
+
+        // حفظ المعلومات الشخصية
+        function savePersonalInfo() {
+            const updates = {
+                fullName: document.getElementById('editFullName').value,
+                email: document.getElementById('editEmail').value,
+                phone: document.getElementById('editPhone').value,
+                address: document.getElementById('editAddress').value,
+                bio: document.getElementById('editBio').value
+            };
+            
+            try {
+                const success = BankSystem.updateUser(currentUser.id, updates);
+                if (success) {
+                    // تحديث المستخدم الحالي
+                    currentUser = { ...currentUser, ...updates };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // تحديث الواجهة
+                    loadUserData();
+                    
+                    // إغلاق النموذج
+                    bootstrap.Modal.getInstance(document.getElementById('editPersonalModal')).hide();
+                    
+                    // عرض رسالة النجاح
+                    showToast('تم تحديث المعلومات بنجاح', 'success');
+                }
+            } catch (error) {
+                showToast('حدث خطأ أثناء تحديث المعلومات', 'error');
+            }
+        }
+             // تغيير كلمة المرور
+        function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmNewPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                showToast('كلمات المرور غير متطابقة', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                showToast('كلمة المرور يجب أن تكون 8 أحرف على الأقل', 'error');
+                return;
+            }
+            
+            try {
+                const success = BankSystem.changePassword(currentUser.id, currentPassword, newPassword);
+                if (success) {
+                    showToast('تم تغيير كلمة المرور بنجاح', 'success');
+                    document.getElementById('changePasswordForm').reset();
+                    
+                    // تسجيل النشاط
+                    BankSystem.logActivity(currentUser.id, 'change_password', 'تغيير كلمة المرور');
+                }
+            } catch (error) {
+                showToast('كلمة المرور الحالية غير صحيحة', 'error');
+            }
+        }
+
+        // رفع الصورة الشخصية
+        function uploadAvatar(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                showToast('يرجى اختيار صورة فقط', 'error');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                showToast('حجم الصورة كبير جداً (الحد الأقصى 5MB)', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const avatar = document.getElementById('profileAvatar');
+                avatar.src = e.target.result;
+                
+                // حفظ الصورة في localStorage (محاكاة)
+                currentUser.avatar = e.target.result;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // تحديث المستخدم في قاعدة البيانات (محاكاة)
+                BankSystem.updateUser(currentUser.id, { avatar: e.target.result });
+                
+                showToast('تم تحديث الصورة الشخصية', 'success');
+                
+                // تسجيل النشاط
+                BankSystem.logActivity(currentUser.id, 'update_avatar', 'تحديث الصورة الشخصية');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // تحميل سجل الدخول
+        function loadLoginHistory() {
+            const container = document.getElementById('loginHistory');
+            
+            // محاكاة بيانات سجل الدخول
+            const loginHistory = [
+                { type: 'success', device: 'Chrome على Windows', ip: '192.168.1.100', time: 'قبل 5 دقائق', location: 'اليمن - لحج' },
+                { type: 'success', device: 'Mobile Safari', ip: '192.168.1.101', time: 'قبل ساعتين', location: 'اليمن - عدن' },
+                { type: 'failed', device: 'Chrome على Windows', ip: '192.168.1.102', time: 'أمس', location: 'غير معروف' },
+                { type: 'success', device: 'Firefox على Mac', ip: '192.168.1.103', time: 'قبل 3 أيام', location: 'اليمن - صنعاء' },
+                { type: 'failed', device: 'Chrome على Windows', ip: '192.168.1.104', time: 'قبل أسبوع', location: 'غير معروف' }
+            ];
+            
+            let html = '';
+            loginHistory.forEach(item => {
+                const badgeClass = item.type === 'success' ? 'bg-success' : 'bg-danger';
+                const badgeText = item.type === 'success' ? 'ناجح' : 'فاشل';
+                const icon = item.type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
+                
+                html += `
+                    <div class="activity-item">
+                        <div class="activity-icon ${badgeClass}">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">
+                                <span class="badge ${badgeClass} me-2">${badgeText}</span>
+                                ${item.device}
+                            </div>
+                            <div class="activity-details">
+                                ${item.ip} | ${item.location}
+                            </div>
+                        </div>
+                        <div class="activity-time">${item.time}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // تحميل سجل النشاط
+        function loadActivityLog() {
+            const container = document.getElementById('activityLog');
+            
+            // محاكاة بيانات النشاط
+            activityLog = [
+                { type: 'login', title: 'تسجيل دخول ناجح', description: 'من Chrome على Windows', time: 'قبل 5 دقائق' },
+                { type: 'transaction', title: 'تحويل أموال', description: 'تحويل 500 ريال إلى حساب 100000001', time: 'قبل ساعتين' },
+                { type: 'security', title: 'تغيير كلمة المرور', description: 'تم تغيير كلمة المرور بنجاح', time: 'أمس' },
+                { type: 'transaction', title: 'إيداع', description: 'إيداع 1000 ريال', time: 'قبل 3 أيام' },
+                { type: 'login', title: 'تسجيل دخول ناجح', description: 'من Mobile Safari', time: 'قبل أسبوع' },
+                { type: 'security', title: 'تفعيل OTP', description: 'تم تفعيل التحقق بخطوتين', time: 'قبل أسبوعين' }
+            ];
+            
+            renderActivityLog('all');
+        }
+
+        // تصفية سجل النشاط
+        function filterActivity(type) {
+            renderActivityLog(type);
+            
+            // تحديث أزرار التصفية
+            document.querySelectorAll('#activity-tab .btn-group .btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // عرض سجل النشاط
+        function renderActivityLog(filter = 'all') {
+            const container = document.getElementById('activityLog');
+            const filteredLog = filter === 'all' ? activityLog : activityLog.filter(item => item.type === filter);
+            
+            if (filteredLog.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">لا توجد أنشطة</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            filteredLog.forEach(item => {
+                const icon = getActivityIcon(item.type);
+                const iconClass = getActivityIconClass(item.type);
+                
+                html += `
+                    <div class="activity-item">
+                        <div class="activity-icon ${iconClass}">
+                            <i class="${icon}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">${item.title}</div>
+                            <div class="activity-details">${item.description}</div>
+                        </div>
+                        <div class="activity-time">${item.time}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // تحميل التفضيلات
+        function loadPreferences() {
+            if (!currentUser.preferences) return;
+            
+            const prefs = currentUser.preferences;
+            
+            // اللغة
+            document.getElementById('languageSelect').value = prefs.language || 'ar';
+            
+            // الوضع
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            document.getElementById('themeSwitch').checked = prefs.theme === 'dark' || isDarkMode;
+            
+            // الإشعارات
+            document.getElementById('emailNotifySwitch').checked = prefs.notifications !== false;
+            
+            // تحميل إعدادات الأمان من المستخدم
+            document.getElementById('otpSwitch').checked = currentUser.otpEnabled !== false;
+            document.getElementById('loginNotifySwitch').checked = currentUser.smsAlerts !== false;
+        }
+
+        // حفظ التفضيلات
+        function savePreferences() {
+            const updates = {
+                preferences: {
+                    language: document.getElementById('languageSelect').value,
+                    theme: document.getElementById('themeSwitch').checked ? 'dark' : 'light',
+                    notifications: document.getElementById('emailNotifySwitch').checked
+                },
+                otpEnabled: document.getElementById('otpSwitch').checked,
+                smsAlerts: document.getElementById('loginNotifySwitch').checked,
+                emailAlerts: document.getElementById('emailNotifySwitch').checked
+            };
+            
+            try {
+                const success = BankSystem.updateUser(currentUser.id, updates);
+                if (success) {
+                    // تحديث المستخدم الحالي
+                    currentUser = { ...currentUser, ...updates };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // تطبيق التغييرات
+                    if (updates.preferences.theme === 'dark') {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+                    
+                    showToast('تم حفظ التفضيلات بنجاح', 'success');
+                    
+                    // تسجيل النشاط
+                    BankSystem.logActivity(currentUser.id, 'update_preferences', 'تحديث التفضيلات');
+                }
+            } catch (error) {
+                showToast('حدث خطأ أثناء حفظ التفضيلات', 'error');
+            }
+        }
+
+        // تحديث إعدادات الأمان
+        function updateSecuritySettings() {
+            const updates = {
+                otpEnabled: document.getElementById('otpSwitch').checked,
+                smsAlerts: document.getElementById('loginNotifySwitch').checked
+            };
+            
+            BankSystem.updateUser(currentUser.id, updates);
+            currentUser = { ...currentUser, ...updates };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            showToast('تم تحديث إعدادات الأمان', 'success');
+        }
+
+        // تحديث سمة الواجهة
+        function updateThemePreference() {
+            const isDark = document.getElementById('themeSwitch').checked;
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // تحديث اللغة
+        function updateLanguagePreference() {
+            const language = document.getElementById('languageSelect').value;
+            localStorage.setItem('language', language);
+            showToast('تم تغيير اللغة. سيتم تحديث الصفحة قريباً', 'info');
+        }
+
+        // عرض الجلسات النشطة
+        function viewActiveSessions() {
+            const modal = new bootstrap.Modal(document.getElementById('sessionsModal'));
+            
+            // محاكاة بيانات الجلسات
+            const sessions = [
+                { id: 1, device: 'Chrome على Windows', ip: '192.168.1.100', lastActive: 'الآن', location: 'اليمن - لحج' },
+                { id: 2, device: 'Mobile Safari', ip: '192.168.1.101', lastActive: 'قبل 30 دقيقة', location: 'اليمن - عدن' },
+                { id: 3, device: 'Firefox على Mac', ip: '192.168.1.102', lastActive: 'قبل 5 ساعات', location: 'اليمن - صنعاء' }
+            ];
+            
+            let html = '';
+            sessions.forEach(session => {
+                html += `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">${session.device}</h6>
+                                    <p class="text-muted mb-0 small">${session.ip} | ${session.location}</p>
+                                    <p class="text-muted mb-0 small">آخر نشاط: ${session.lastActive}</p>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="terminateSession(${session.id})">
+                                        <i class="fas fa-sign-out-alt"></i> إنهاء الجلسة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('sessionsList').innerHTML = html;
+            modal.show();
+        }
+
+        // إنهاء جلسة
+        function terminateSession(sessionId) {
+            showToast(`تم إنهاء الجلسة ${sessionId}`, 'success');
+            viewActiveSessions(); // إعادة تحميل القائمة
+        }
+
+        // إنهاء جميع الجلسات
+        function terminateAllSessions() {
+            if (confirm('هل أنت متأكد من إنهاء جميع الجلسات؟ سيتم تسجيل خروجك من جميع الأجهزة.')) {
+                showToast('تم إنهاء جميع الجلسات', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('sessionsModal')).hide();
+            }
+        }
+
+        // تصدير PDF
+        function exportPDF() {
+            showToast('جارٍ إنشاء ملف PDF...', 'info');
+            setTimeout(() => {
+                showToast('تم تصدير ملف PDF بنجاح', 'success');
+            }, 2000);
+        }
+
+        // تصدير Excel
+        function exportExcel() {
+            showToast('جارٍ إنشاء ملف Excel...', 'info');
+            setTimeout(() => {
+                showToast('تم تصدير ملف Excel بنجاح', 'success');
+            }, 2000);
+        }
+            // تحديث سجل الدخول
+        function refreshLoginHistory() {
+            loadLoginHistory();
+            showToast('تم تحديث سجل الدخول', 'info');
+        }
+
+        // أدوات مساعدة
+        function formatCurrency(amount) {
+            return amount.toLocaleString('ar-SA') + ' ريال';
+        }
+
+        function getAccountType(type) {
+            const types = {
+                'current': 'حساب جاري',
+                'saving': 'حساب توفير',
+                'investment': 'حساب استثماري',
+                'business': 'حساب أعمال'
+            };
+            return types[type] || 'غير محدد';
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'login': 'fas fa-sign-in-alt',
+                'transaction': 'fas fa-exchange-alt',
+                'security': 'fas fa-shield-alt'
+            };
+            return icons[type] || 'fas fa-circle';
+        }
+
+        function getActivityIconClass(type) {
+            const classes = {
+                'login': 'bg-primary',
+                'transaction': 'bg-success',
+                'security': 'bg-warning'
+            };
+            return classes[type] || 'bg-secondary';
+        }
+
+        function showToast(message, type = 'info') {
+            BankSystem.showToast(message, type);
+        }
+
+        function togglePassword(fieldId) {
+            const input = document.getElementById(fieldId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>
